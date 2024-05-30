@@ -41,6 +41,7 @@ export const signupUser = async (req, res) => {
       _id: newUser._id,
       fullName: newUser.fullName,
       username: newUser.username,
+      password: newUser.password, // BUG: Should not return password
       profilePicture: newUser.profilePicture,
     });
   } catch (error) {
