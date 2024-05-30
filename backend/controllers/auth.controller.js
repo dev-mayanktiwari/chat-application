@@ -1,23 +1,17 @@
-import { User } from "../models/user.model.js";
+import User from "../models/user.model.js";
+import { UserType } from "../types/user.type.js";
 
-export const signupUser = (req, res) => {
+export const signupUser = async (req, res) => {
   try {
-    const {
-      fullName,
-      email: username,
-      password,
-      confirmPassword,
-      gender,
-    } = req.body;
-    const result = userType.safeParse({
+    const { fullName, username, password, confirmPassword, gender } = req.body;
+    const result = UserType.safeParse({
       fullName,
       username,
       password,
       confirmPassword,
-      profilePicture,
     });
     if (!result.success) {
-      return res.status(400).json({ error: result.error });
+      return res.status(400).json({ error: result.error.errors[0].message });
     }
     if (password != confirmPassword) {
       return res
@@ -25,7 +19,7 @@ export const signupUser = (req, res) => {
         .json({ error: "Password and Confirm Password do not match" });
     }
 
-    const user = new User.findOne({ username });
+    const user = await User.findOne({ username });
     if (user) {
       return res.status(400).json({ error: "User already exists" });
     }
@@ -35,11 +29,19 @@ export const signupUser = (req, res) => {
     const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
     const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
 
-    const newUser = new User.create({
+    const newUser = await User.create({
       fullName,
       username,
       password,
-      profilePicture,
+      gender,
+      profilePicture: gender === "male" ? boyProfilePic : girlProfilePic,
+    });
+
+    return res.status(201).json({
+      _id: newUser._id,
+      fullName: newUser.fullName,
+      username: newUser.username,
+      profilePicture: newUser.profilePicture,
     });
   } catch (error) {
     console.log("Error signing up user", error);

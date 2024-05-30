@@ -1,10 +1,9 @@
-import { z } from zod;
+import { z } from "zod";
 
 export const UserType = z.object({
-  fullname: z.string().nonempty(),
-  username: z.string().nonempty(),
+  fullName: z.string(),
+  username: z.string(),
   password: z.string().min(6),
-  confirmPassword: z.string.min(6),
-  profilePicture: z.string().url(),
-})
-
+  confirmPassword: z.string().min(6),
+  confirmPassword: z.string().min(6),
+});

@@ -8,8 +8,9 @@
     "server": "node backend/server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Mayank Tiwari",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookieparser": "^0.1.0",
