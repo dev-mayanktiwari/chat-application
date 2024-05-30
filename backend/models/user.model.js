@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minLenght: 6,
+    minlength: 6, // Fixed typo: should be minlength, not minLenght
   },
   gender: {
     type: String,
@@ -27,33 +27,37 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// Middleware to hash password before saving
 userSchema.pre("save", async function (next) {
   const user = this;
   if (!user.isModified("password")) return next();
+
   try {
-  const saltround = await bcrypt.genSalt(11);
-  const hashedPassword = await bcrypt.hash(user.password, saltround);
-  user.password = hashedPassword;
-  next();
+    const salt = await bcrypt.genSalt(11);
+    user.password = await bcrypt.hash(user.password, salt);
+    next();
   } catch (error) {
-    return next(error);
+    next(error);
   }
-)};
+});
 
 async function hashPassword(next) {
-const update = this.getUpdate();
-if (update.password) {
-  try {
-  const saltround = 11;
-  const salt = bcrypt.genSalt(saltround);
-  update.password = await bcrypt.hash(update.password, salt);
-  this.setUpdate(update);
-  next();
-  } catch(error) {
-  next(error);
+  const update = this.getUpdate();
+  if (update.password) {
+    try {
+      const salt = await bcrypt.genSalt(11);
+      update.password = await bcrypt.hash(update.password, salt);
+      this.setUpdate(update);
+      next();
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    next();
   }
 }
 
+// Middleware to hash password before update
 userSchema.pre("findOneAndUpdate", hashPassword);
 userSchema.pre("updateOne", hashPassword);
 
