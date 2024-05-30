@@ -1,5 +1,8 @@
 import User from "../models/user.model.js";
 import { UserType } from "../types/user.type.js";
+import generateTokenandCookie from "../utils/generateToken.js";
+import pkg from "bcryptjs";
+const { compare } = pkg;
 
 export const signupUser = async (req, res) => {
   try {
@@ -11,7 +14,7 @@ export const signupUser = async (req, res) => {
       confirmPassword,
     });
     if (!result.success) {
-      return res.status(400).json({ error: result.error.errors[0].message });
+      return res.status(400).json({ error: result.error.message });
     }
     if (password != confirmPassword) {
       return res
@@ -37,23 +40,54 @@ export const signupUser = async (req, res) => {
       profilePicture: gender === "male" ? boyProfilePic : girlProfilePic,
     });
 
-    return res.status(201).json({
-      _id: newUser._id,
-      fullName: newUser.fullName,
-      username: newUser.username,
-      password: newUser.password, // BUG: Should not return password
-      profilePicture: newUser.profilePicture,
-    });
+    if (newUser) {
+      generateTokenandCookie(newUser._id, res);
+      return res.status(201).json({
+        _id: newUser._id,
+        fullName: newUser.fullName,
+        username: newUser.username,
+        profilePicture: newUser.profilePicture,
+      });
+    } else {
+      res.status(400).json({
+        error: "Invalid user data.",
+      });
+    }
   } catch (error) {
     console.log("Error signing up user", error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-export const loginUser = (req, res) => {
-  console.log("loginUser");
+export const loginUser = async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const user = await User.findOne({ username });
+    const isPasswordCorrect = compare(password, user?.password || "");
+
+    if (!user || !isPasswordCorrect) {
+      return res.status(400).json({ error: "Invalid credentials." });
+    }
+
+    generateTokenandCookie(user._id, res);
+    return res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      username: user.username,
+      profilePicture: user.profilePicture,
+    });
+  } catch (error) {
+    console.log("Error log in controller", error);
+    return res.status(500).json({ error: "Internal server error." });
+  }
 };
 
 export const logoutUser = (req, res) => {
-  console.log("logoutUser");
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    return res.status(200).json({ message: "Logged out successfully." });
+  } catch (error) {
+    console.log("Error log out controller", error);
+    return res.status(500).json({ error: "Internal server error." });
+  }
 };
