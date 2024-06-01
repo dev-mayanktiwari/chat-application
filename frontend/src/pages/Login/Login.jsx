@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import useLogin from "../../Hooks/useLogin";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
   });
-
-  const handleLogin = (e) => {
+  const { loading, login } = useLogin();
+  const handleLogin = async (e) => {
     e.preventDefault();
-    await login(loginData)
-  }
+    await login(loginData);
+  };
   return (
     <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
       <div className="w-full p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0">
@@ -26,7 +27,9 @@ const Login = () => {
             type="text"
             placeholder="Enter Username"
             value={loginData.username}
-            onChange={(e) => setLoginData({...loginData, username: e.target.value})}
+            onChange={(e) =>
+              setLoginData({ ...loginData, username: e.target.value })
+            }
             className="w-full input input-bordered h-10"
           />
           <div className="label p-2">
@@ -35,7 +38,9 @@ const Login = () => {
           <input
             type="password"
             value={loginData.password}
-            onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+            onChange={(e) =>
+              setLoginData({ ...loginData, password: e.target.value })
+            }
             placeholder="Enter Password"
             className="w-full input input-bordered h-10"
           />
@@ -45,15 +50,20 @@ const Login = () => {
           >
             {"Don't"} have a account?
           </Link>
-        <div>
-          <button
-            type="submit"
-            className="btn btn-block btn-sm mt-6 text-md"
-            style={{ height: 20 }}
-          >
-            Login
-          </button>
-        </div>
+          <div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-block btn-sm mt-6 text-md"
+              style={{ height: 20 }}
+            >
+              {loading ? (
+                <span className="loading loading-spinner"> </span>
+              ) : (
+                "Login"
+              )}
+            </button>
+          </div>
         </form>
       </div>
     </div>
