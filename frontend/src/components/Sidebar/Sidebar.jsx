@@ -1,12 +1,18 @@
+import SearchBar from "./SearchBar";
+import UserPallete from "./UserPallete";
+import LogoutButton from "./Logout";
+
 const Sidebar = () => {
   return (
-    <div>
-        <SearchBar />
-        {/* <div className="divider px-3"></div>
-        <UserPallete/>
-        <LogOut/> */}
-    </div>
-  )
-}
+    <div className="border-r border-slate-500 p-4 flex flex-col">
+      <SearchBar />
+      <div className="divider px-3">
 
-export default Sidebar
+      </div>
+      <UserPallete />
+      <LogoutButton/>
+    </div>
+  );
+};
+
+export default Sidebar;
