@@ -1,31 +1,37 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-const userSchema = new mongoose.Schema({
-  fullName: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    fullName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
+      trim: true,
+    },
+    gender: {
+      type: String,
+      required: true,
+      enum: ["male", "female"],
+    },
+    profilePicture: {
+      type: String,
+      default: "",
+    },
   },
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 6, // Fixed typo: should be minlength, not minLenght
-  },
-  gender: {
-    type: String,
-    required: true,
-    enum: ["male", "female"],
-  },
-  profilePicture: {
-    type: String,
-    default: "",
-  },
-}, {timestamps: true});
+  { timestamps: true }
+);
 
 // Middleware to hash password before saving
 userSchema.pre("save", async function (next) {

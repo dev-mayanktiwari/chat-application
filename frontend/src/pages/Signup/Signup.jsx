@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import GenderCheckbox from "./GenderCheckbox";
 import { useState } from "react";
+import useSignup from "../../Hooks/useSignup";
+import toast from "react-hot-toast";
 
 const Signup = () => {
+  const { loading, signup } = useSignup();
+
   const [input, setInput] = useState({
     fullName: "",
     username: "",
@@ -15,10 +19,19 @@ const Signup = () => {
     setInput({ ...input, gender });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(input);
-    
+    toast.promise(signup(input), {
+      loading: "Creating user...",
+      success: (data) => {
+        console.log(data);
+        return "Signup successful!";
+      },
+      error: (error) => {
+        console.error(error);
+        return "Signup failed.";
+      },
+    });
   };
 
   return (
@@ -53,7 +66,7 @@ const Signup = () => {
             <span className="text-base label-text">Password</span>
           </div>
           <input
-            type="text"
+            type="password"
             placeholder="Enter Password"
             className="w-full input input-bordered h-10"
             value={input.password}
@@ -63,7 +76,7 @@ const Signup = () => {
             <span className="text-base label-text">Confirm Password</span>
           </div>
           <input
-            type="text"
+            type="password"
             placeholder="Confirm Password"
             className="w-full input input-bordered h-10"
             value={input.confirmPassword}
