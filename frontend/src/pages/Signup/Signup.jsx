@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import GenderCheckbox from "./GenderCheckbox";
 import { useState } from "react";
 import useSignup from "../../Hooks/useSignup";
-import toast from "react-hot-toast";
 
 const Signup = () => {
   const { loading, signup } = useSignup();
@@ -21,17 +20,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.promise(signup(input), {
-      loading: "Creating user...",
-      success: (data) => {
-        console.log(data);
-        return "Signup successful!";
-      },
-      error: (error) => {
-        console.error(error);
-        return "Signup failed.";
-      },
-    });
+    await signup(input);
   };
 
   return (
@@ -97,10 +86,11 @@ const Signup = () => {
           <div>
             <button
               type="submit"
+              disabled={loading}
               className="btn btn-block btn-sm mt-6 text-md"
               style={{ height: 20 }}
             >
-              Signup
+              {loading ? <span className="loading loading-spinner"> </span> : "Signup"}
             </button>
           </div>
         </form>

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useAuthContext } from "../context/AuthContext";
 
 const useSignup = () => {
   const [loading, setLoading] = useState(false);
+  const { setAuthUser } = useAuthContext();
 
   const signup = async ({
     fullName,
@@ -20,7 +22,7 @@ const useSignup = () => {
       gender,
     });
     if (!success) {
-      return Promise.reject(new Error("Inpur validation failed."));
+      return;
     }
     setLoading(true);
     try {
@@ -39,15 +41,24 @@ const useSignup = () => {
           },
         }
       );
-      console.log(response);
-      return Promise.resolve(response.data)
+      console.log(response); //remove it from here
+      if (response.status !== 201) {
+        // Check if the error message indicates that the user already exists
+        if (response.data && response.data.error === "User already exists") {
+          throw new Error("User already exists");
+        } else {
+          throw new Error(response.statusText);
+        }
+      }
+      localStorage.setItem("currentUser", JSON.stringify(response));
+      setAuthUser(response);
     } catch (error) {
-      return Promise.reject(error.message)
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
   };
-  return {loading, signup};
+  return { loading, signup };
 };
 
 function handleInputErrors({
@@ -61,7 +72,7 @@ function handleInputErrors({
     toast.error("Please fill all the fields.");
     return false;
   }
-  if (password != confirmPassword) {
+  if (password !== confirmPassword) {
     toast.error("Passwords don't match.");
     return false;
   }

@@ -1,6 +1,6 @@
 import SearchBar from "./SearchBar";
 import UserPallete from "./UserPallete";
-import LogoutButton from "./Logout";
+import LogoutButton from "./LogoutButton";
 
 const Sidebar = () => {
   return (
