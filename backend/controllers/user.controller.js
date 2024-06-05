@@ -2,9 +2,11 @@ import User from "../models/user.model.js";
 
 export const getUsers = async (req, res) => {
   try {
+    console.log("first")
     const currentUser = req.user._id;
-
+    console.log(currentUser);
     const userList = await User.find({ _id: { $ne: currentUser } });
+    console.log(userList);
     if (!userList) {
       return res.status(401).json({
         error: "Error in accessing users. Try again later.",
@@ -15,7 +17,7 @@ export const getUsers = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in userController", error.message);
-    return resizeBy.status(500).json({
+    return res.status(500).json({
       error: "Internal server gateway.",
     });
   }

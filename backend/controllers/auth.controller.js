@@ -1,8 +1,8 @@
 import User from "../models/user.model.js";
 import { UserType } from "../types/user.type.js";
 import generateTokenandCookie from "../utils/generateToken.js";
-import pkg from "bcryptjs";
-const { compare } = pkg;
+import { compare } from "bcrypt";
+
 
 export const signupUser = async (req, res) => {
   try {
@@ -63,8 +63,8 @@ export const loginUser = async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await User.findOne({ username });
-    const isPasswordCorrect = compare(password, user?.password || "");
-
+    const isPasswordCorrect = await compare(password, user.password);
+    // console.log(isPasswordCorrect);
     if (!user || !isPasswordCorrect) {
       return res.status(400).json({ error: "Invalid credentials." });
     }

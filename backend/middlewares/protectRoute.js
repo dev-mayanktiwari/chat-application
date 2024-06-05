@@ -6,7 +6,7 @@ dotenv.config();
 export const protectRoute = async (req, res, next) => {
   try {
     const token = req.cookies.jwt;
-    console.log("Token:", token); // Log the token
+    // console.log("Token:", token); // Log the token
 
     if (!token) {
       return res.status(401).json({
@@ -17,7 +17,8 @@ export const protectRoute = async (req, res, next) => {
     // Verify the JWT token
     let decoded;
     try {
-      decoded = jwt.verify(token, "S9^-!_LB7dddI!6tqypeV)Jghy7Mv[uW7e");
+      const secretKey = process.env.JWT_SECRET;
+      decoded = jwt.verify(token, secretKey);
     } catch (error) {
       console.log("Token verification error:", error); // Log token verification errors
       return res.status(401).json({
@@ -25,11 +26,11 @@ export const protectRoute = async (req, res, next) => {
       });
     }
 
-    console.log("Decoded:", decoded); // Log the decoded token
+    // console.log("Decoded:", decoded); // Log the decoded token
 
     // Extract user ID from decoded token
-    const userId = decoded.userID;
-    console.log("User ID:", userId); // Log the user ID
+    const userId = decoded.userId; // Ensure this matches the property in your JWT
+    // console.log("User ID:", userId); // Log the user ID
 
     // Fetch user from the database
     const user = await User.findById(userId).select("-password");

@@ -19,6 +19,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.0",
+    "recoil": "^0.7.7",
     "socketio": "^1.0.0",
     "zod": "^3.23.8"
   }

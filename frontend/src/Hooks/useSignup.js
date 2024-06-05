@@ -41,7 +41,7 @@ const useSignup = () => {
           },
         }
       );
-      console.log(response); //remove it from here
+      // console.log(response); //remove it from here
       if (response.status !== 201) {
         if (response.data && response.data.error === "User already exists") {
           throw new Error("User already exists");
