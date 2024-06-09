@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 const useGetMessages = () => {
-  const [messages, setMessages] = useRecoilState(sendMessage);
+  const [mssgs, setMessages] = useRecoilState(sendMessage);
   const selectedConversation = useRecoilValue(currentUser);
   const [loading, setLoading] = useState(false);
 
@@ -36,7 +36,7 @@ const useGetMessages = () => {
     }
   }, [selectedConversation?._id, setMessages]);
 
-  return { messages, loading };
+  return { mssgs, loading };
 };
 
 export default useGetMessages;
