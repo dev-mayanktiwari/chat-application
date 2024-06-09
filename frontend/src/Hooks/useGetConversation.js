@@ -1,4 +1,3 @@
-import { data } from "autoprefixer";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -22,7 +21,6 @@ const useGetConversation = () => {
         setLoading(false);
       }
     };
-    setConversations(data);
     getConversation();
   }, []);
 
