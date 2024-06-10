@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { currentUser, sendMessage } from "../store/useConversation";
+import { currentUser, sendMessage } from "../store/useConversation.js";
 import toast from "react-hot-toast";
 import axios from "axios";
 
 const useSendMessage = () => {
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useRecoilState(sendMessage);
+  const [messages, setMessages] = useRecoilState(sendMessage);
   const selectedUserId = useRecoilValue(currentUser);
 
   const sendMessagefn = async (messageContent) => {
@@ -15,7 +15,7 @@ const useSendMessage = () => {
       const res = await axios.post(
         `/api/messages/sendMessage/${selectedUserId._id}`,
         {
-          message: JSON.stringify(messageContent),
+          message: messageContent, // No need to stringify the message content here
         },
         {
           headers: {
@@ -23,10 +23,29 @@ const useSendMessage = () => {
           },
         }
       );
-      if (res.error) {
-        throw new Error(res.error);
+
+      if (res.data.error) {
+        throw new Error(res.data.error);
       }
-      setMessage([...message, res]);
+
+      const newMessage = res.data.newMessage;
+      console.log("this is", newMessage);
+
+      // Ensure messages is mutable and append the new message
+      // Deep copying solved the problem of state not updating
+      // remember this as a concept
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages];
+        if (updatedMessages.length === 0) {
+          return [{ messages: [newMessage] }];
+        } else {
+          const updatedConversation = { ...updatedMessages[0] };
+          updatedConversation.messages = [...updatedConversation.messages, newMessage];
+          return [updatedConversation];
+        }
+      });
+
+      console.log("it is from use send message hook", messages);
     } catch (error) {
       toast.error(error.message);
     } finally {
