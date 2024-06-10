@@ -45,7 +45,7 @@ const useSendMessage = () => {
         }
       });
 
-      console.log("it is from use send message hook", messages);
+      // console.log("it is from use send message hook", messages);
     } catch (error) {
       toast.error(error.message);
     } finally {

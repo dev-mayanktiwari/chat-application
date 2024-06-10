@@ -1,17 +1,15 @@
 import Message from "./Message";
 import MessageSkeleton from "../Skeletons/MessageSkeleton.jsx";
 import useGetMessages from "../../Hooks/useGetMessages.js";
-import MessageSkeleton from "../Skeletons/MessageSkeleton.jsx";
-import useGetMessages from "../../Hooks/useGetMessages.js";
 
 const Messages = () => {
   const { mssgs, loading } = useGetMessages();
 
   // Check if mssgs is defined and has at least one element
-  const messages = (mssgs && mssgs.length > 0) ? mssgs[0].messages || [] : [];
+  const messages = mssgs && mssgs.length > 0 ? mssgs[0].messages || [] : [];
   //console.log(mssgs)
   console.log(messages);
-  console.log(Array.isArray(messages))
+  console.log(Array.isArray(messages));
   // console.log(messages);
   // console.log(Array.isArray(messages));
 
@@ -29,4 +27,3 @@ const Messages = () => {
 };
 
 export default Messages;
-
