@@ -1,6 +1,8 @@
 import Message from "./Message";
 import MessageSkeleton from "../Skeletons/MessageSkeleton.jsx";
 import useGetMessages from "../../Hooks/useGetMessages.js";
+import MessageSkeleton from "../Skeletons/MessageSkeleton.jsx";
+import useGetMessages from "../../Hooks/useGetMessages.js";
 
 const Messages = () => {
   const { mssgs, loading } = useGetMessages();
