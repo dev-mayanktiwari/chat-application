@@ -9,3 +9,8 @@ export const sendMessage = atom({
   key: "messages",
   default: [],
 });
+
+export const searchTerm = atom({
+  key: "search",
+  default: "",
+})

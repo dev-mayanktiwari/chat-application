@@ -1,16 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { useRecoilValue } from "recoil";
+import { searchTerm } from "../store/useConversation";
 
 const useGetConversation = () => {
   const [loading, setLoading] = useState(false);
+  const searchValue = useRecoilValue(searchTerm);
   const [conversations, setConversations] = useState([]);
-
   useEffect(() => {
     const getConversation = async () => {
       setLoading(true);
       try {
-        const { data } = await axios.get("/api/users/getUsers");
+        const { data } = await axios.get(
+          "/api/users/getUsers?search=" + searchValue
+        );
         if (!data) {
           throw new Error("No data found");
         }
@@ -22,7 +26,7 @@ const useGetConversation = () => {
       }
     };
     getConversation();
-  }, []);
+  }, [searchValue]);
 
   return { loading, conversations };
 };

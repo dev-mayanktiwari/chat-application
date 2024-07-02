@@ -30,6 +30,7 @@ const useSendMessage = () => {
 
       const newMessage = res.data.newMessage;
       console.log("this is", newMessage);
+      console.log(messages);
 
       // Ensure messages is mutable and append the new message
       // Deep copying solved the problem of state not updating

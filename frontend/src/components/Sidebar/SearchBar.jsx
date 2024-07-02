@@ -1,13 +1,35 @@
-import { IoSearchSharp } from "react-icons/io5";
+import { useSetRecoilState } from "recoil";
+import { searchTerm } from "../../store/useConversation";
+import useDebounce from "../../Hooks/useDebounce";
+import { useState, useEffect } from "react";
 
 const SearchBar = () => {
-  return (
-    <form className="flex items-center gap-2">
-        <input type="text" placeholder="Search...." className="input input-bordered rounded-full" />
-        <button type="submit" className="btn btn-circle bg-sky-500 text-white">
-        <IoSearchSharp className='w-6 h-6 outline-none' /></button>
-    </form>
-  )
-}
+  const [searchVal, setSearchVal] = useState("");
+  const setSearchValue = useSetRecoilState(searchTerm);
+  const debouncedSearchVal = useDebounce(searchVal, 300);
 
-export default SearchBar
+  useEffect(() => {
+    setSearchValue(debouncedSearchVal);
+  }, [debouncedSearchVal, setSearchValue]);
+
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <input
+        type="text"
+        value={searchVal}
+        onChange={(e) => setSearchVal(e.target.value)}
+        placeholder="Search...."
+        className="input input-bordered rounded-full"
+      />
+      {/* {loading ? (
+        <div className="loading-container">
+          <span className="loading loading-spinner mx-auto"></span>
+        </div>
+      ) : (
+        <div className="user-list">{renderUsers(filteredUsers)}</div>
+      )} */}
+    </div>
+  );
+};
+
+export default SearchBar;
