@@ -18,7 +18,7 @@ export const SocketContextProvider = ({ children }) => {
     let socket;
 
     if (authUser) {
-      socket = io("https://chatgram-app-4gtx.onrender.com", {
+      socket = io("https://chatgram-final.netlify.app/", {
         query: {
           userId: authUser.data._id,
         },
