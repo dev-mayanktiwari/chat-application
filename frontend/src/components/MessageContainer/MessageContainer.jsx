@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import MessageInput from "./MessageInput";
 import Messages from "./Messages";
 
