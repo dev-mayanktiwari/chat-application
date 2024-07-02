@@ -18,7 +18,7 @@ export const SocketContextProvider = ({ children }) => {
     let socket;
 
     if (authUser) {
-      socket = io("http://localhost:3000", {
+      socket = io("https://chatgram-mt.netlify.app", {
         query: {
           userId: authUser.data._id,
         },
